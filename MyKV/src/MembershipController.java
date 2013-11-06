@@ -41,10 +41,10 @@ public class MembershipController {
         
         //If we're the only one in the group that we know of, let's join!
         if(memList.size() <= 1) {
-            if(!contactIP.equals(ownIP)) {
-                System.out.println("Joining! " + ownIP + " -> " + contactIP);
+            //if(!contactIP.equals(ownIP)) {
+                //System.out.println("Joining! " + ownIP + " -> " + contactIP);
                 sendJoinGroup(contactIP, contactPort);
-            }
+            //}
             return;
         }
 

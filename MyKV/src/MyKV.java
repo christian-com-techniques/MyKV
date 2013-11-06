@@ -9,7 +9,7 @@ import javax.xml.bind.JAXBException;
 
 public class MyKV {
 
-	private static boolean running = true;
+    private static boolean running = true;
     private static Config conf;
     private static MembershipList ownList;
     private static final String configFileName = "mykv.conf";
@@ -85,9 +85,6 @@ public class MyKV {
 	        
 	}
 	
-	public static MembershipList getMembershipList() {
-		return ownList;
-	}
 	
 	public static int getContactPort() {
 		return contactPort;

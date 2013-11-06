@@ -36,7 +36,7 @@ public class KeyValueController<T> {
 		}
 		
 		
-    	MembershipList ownList = MyKV.getMembershipList();
+    	MembershipList ownList = ConnectionHandler.getMembershipList();
     	int port = MyKV.getContactPort();
 		
 
@@ -99,7 +99,7 @@ public class KeyValueController<T> {
 			e.printStackTrace();
 		}
 		
-    	MembershipList ownList = MyKV.getMembershipList();
+    	MembershipList ownList = ConnectionHandler.getMembershipList();
     	int port = MyKV.getContactPort();
 		
 		for(int i=0;i<ownList.get().size();i++) {
@@ -156,7 +156,7 @@ public class KeyValueController<T> {
 			e.printStackTrace();
 		}
 		
-    	MembershipList ownList = MyKV.getMembershipList();
+    	MembershipList ownList = ConnectionHandler.getMembershipList();
     	int port = MyKV.getContactPort();
     	
 		for(int i=0;i<ownList.get().size();i++) {
@@ -234,7 +234,7 @@ public class KeyValueController<T> {
 			e.printStackTrace();
 		}
 		
-    	MembershipList ownList = MyKV.getMembershipList();
+    	MembershipList ownList = ConnectionHandler.getMembershipList();
     	int port = MyKV.getContactPort();
 		
 		for(int i=0;i<ownList.get().size();i++) {
@@ -275,7 +275,7 @@ public class KeyValueController<T> {
 	//incomplete membership lists) to the right nodes and delete them locally.
 	public static void cleanUp() {
 		
-    	MembershipList ownList = MyKV.getMembershipList();
+    	MembershipList ownList = ConnectionHandler.getMembershipList();
     	String localIP = MyKV.getmyIP();
     	
     	

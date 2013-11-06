@@ -149,7 +149,7 @@ public class UserinputHandler implements Runnable {
             	
             	System.out.println("Local Membershiplist --------------------");
             	
-            	MembershipList mL = MyKV.getMembershipList();
+            	MembershipList mL = ConnectionHandler.getMembershipList();
             	ArrayList<MembershipEntry> aL = mL.get();
             	
             	for(int i=0;i<aL.size();i++) {

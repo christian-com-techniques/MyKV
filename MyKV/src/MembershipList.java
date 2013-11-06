@@ -25,7 +25,7 @@ public class MembershipList {
     
     public void add(int id, String ip) {                
         
-        System.out.println("Adding: " + ip);
+        //System.out.println("Adding: " + ip);
         MembershipEntry mE = new MembershipEntry(id, ip);
         
         if(membershipList.size() == 0) {
@@ -55,9 +55,24 @@ public class MembershipList {
         
         
     }
+    
+    
+    
 
     public ArrayList<MembershipEntry> get() {
         return membershipList;
+    }
+    
+    
+    public boolean ipExists(String ip) {
+        
+    	for(int i=0;i<membershipList.size();i++) {
+    		if(membershipList.get(i).getIPAddress().equals(ip)) {
+    			return true;
+    		}
+    	}
+    	
+    	return false;
     }
     
 

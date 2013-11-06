@@ -25,7 +25,7 @@ public class ConnectionHandler implements Runnable {
     private boolean shouldRun = true;
     private Config conf;
     private int bufferSize = 2048;
-    private MembershipList list;
+    private static MembershipList list = new MembershipList();
     
     public ConnectionHandler(Config conf) {
     	this.conf = conf;
@@ -93,19 +93,25 @@ public class ConnectionHandler implements Runnable {
 					e1.printStackTrace();
 				}
                 
-                System.out.println(newMember + " is joining the cluster.");
-                list.add(id, newMember);
+                //System.out.println(newMember + " is joining the cluster.");
+				
+				if(!list.ipExists(newMember)) {
+					
+	                list.add(id, newMember);
 
-                ArrayList<MembershipEntry> memList = list.get();
+	                ArrayList<MembershipEntry> memList = list.get();
 
-                try {
-                    String marshalledMessage = DstrMarshaller.toXML(memList);
-                    Supplier.send(newMember, port, marshalledMessage);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (JAXBException e) {
-                    e.printStackTrace();
-                }
+	                try {
+	                    String marshalledMessage = DstrMarshaller.toXML(memList);
+	                    Supplier.send(newMember, port, marshalledMessage);
+	                } catch (IOException e) {
+	                    e.printStackTrace();
+	                } catch (JAXBException e) {
+	                    e.printStackTrace();
+	                }
+					
+				}
+
                 
                 
                 // Go this way, when the node receives a leave-request from another node
@@ -232,7 +238,7 @@ public class ConnectionHandler implements Runnable {
             	
             	System.out.println("Membershiplist --------------------------");
             	
-            	MembershipList ml = MyKV.getMembershipList();
+            	MembershipList ml = list;
             	ArrayList<MembershipEntry> memList = ml.get();
             	
             	for(int i=0;i<memList.size();i++) {
@@ -245,6 +251,10 @@ public class ConnectionHandler implements Runnable {
             
         }
 		
+	}
+	
+	public static MembershipList getMembershipList() {
+		return list;
 	}
 
     public void kill() {
