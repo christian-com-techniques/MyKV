@@ -38,27 +38,6 @@ public class MyKV {
 	        if(myIP.equals(contactIP))
 	            ownList.add(id, myIP);
 	        
-	        /*
-	        String testip = "192.168.56.102";
-	        int idt = (int)(Hash.value(testip, 6));
-	        ownList.add(idt, testip);
-	        
-	        String testip3 = "192.168.56.103";
-	        int idt3 = (int)(Hash.value(testip3, 6));
-	        ownList.add(idt3, testip3);
-	        
-	        String testip4 = "192.168.56.104";
-	        int idt4 = (int)(Hash.value(testip4, 6));
-	        ownList.add(idt4, testip4);
-	        
-	        String testip5 = "192.168.56.105";
-	        int idt5 = (int)(Hash.value(testip5, 6));
-	        ownList.add(idt5, testip5);
-	        
-	        String testip6 = "192.168.56.106";
-	        int idt6 = (int)(Hash.value(testip6, 6));
-	        ownList.add(idt6, testip6);
-	        */
 	        
 	        ConnectionHandler connectionHandler = new ConnectionHandler(conf);
 	        Thread handlerThread = new Thread(connectionHandler, "Connection Handler");

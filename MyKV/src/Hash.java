@@ -17,6 +17,7 @@ public class Hash {
 			length = 16;
 		}
 		
+		sha1 = sha1.replaceAll("[^\\d.]", "");
 		String cut = sha1.substring(0, length-1);
 		
 		while(cut.length() < length) {
