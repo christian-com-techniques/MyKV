@@ -55,6 +55,9 @@ public class MyKV {
 	            
 	            //The cleanUp may only be called when the membership list got an update
 	            KeyValueController.cleanUp();
+	            
+	            MembershipList mL = ConnectionHandler.getMembershipList();
+	            ownList = mL;
 	            Thread.sleep(conf.intFor("TGossip"));
 	        }
 	                
