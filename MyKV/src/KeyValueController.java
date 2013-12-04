@@ -430,8 +430,10 @@ public class KeyValueController<T> {
                             }
 
                             if(store.get(i).getRedistribute()) {
-                                if(ip.equals(localIP))
+                                if(ip.equals(localIP)) {
+                                    System.out.println("Unmarking " + store.get(i).getKey() + " " + store.get(i).getValue() + " as redistribute.");
                                     store.get(i).setRedistribute(false);
+                                }
                             }
                             else {
                                 for(int k = 0; k < store.size(); k++) {
