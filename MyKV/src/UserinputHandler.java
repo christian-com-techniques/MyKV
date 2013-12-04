@@ -11,9 +11,11 @@ public class UserinputHandler implements Runnable {
     private static boolean shouldRun = true;
     static BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
     private KeyValueController<String> kvc;
+    private KeyValueController<String> kvc_backup;
 
-    public UserinputHandler(KeyValueController<String> keyValueController) {
+    public UserinputHandler(KeyValueController<String> keyValueController, KeyValueController<String> keyValueController_Backup) {
         kvc = keyValueController;
+        kvc_backup = keyValueController_Backup;
     }
 
     @Override
@@ -153,11 +155,18 @@ public class UserinputHandler implements Runnable {
      			
             	//KeyValueController<String> kvc = new KeyValueController<String>();
             	ArrayList<KVEntry<String>> al = kvc.showStore();
+                ArrayList<KVEntry<String>> bl = kvc_backup.showStore();
 
             	System.out.println("Local Key-Values ------------------------");
             	
             	for(int i=0;i<al.size();i++) {
                     System.out.println("key: "+al.get(i).getKey()+", value: "+al.get(i).getValue());
+            	}
+
+                System.out.println("Local Key-Value Backups -----------------");
+                
+                for(int i=0;i<bl.size();i++) {
+                    System.out.println("key: "+bl.get(i).getKey()+", value: "+bl.get(i).getValue());
             	}
             	
             	System.out.println("Local Membershiplist --------------------");
