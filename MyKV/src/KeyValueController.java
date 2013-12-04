@@ -30,6 +30,7 @@ public class KeyValueController<T> {
             //If key already exists in store, do nothing
             for(int i=0;i<store.size();i++) {
                 if(store.get(i).getKey() == key) {
+                    store.get(i).setRedistribute(false);
                     return;
                 }
             }
@@ -405,8 +406,8 @@ public class KeyValueController<T> {
                         //If not, the key-value-pair is sent to the machine where it should be according 
                         //to the local membership list. The pair is deleted locally afterwards.
 
-                        if(!(ownList.get().get((j+1) % ownList.get().size()).getIPAddress().equals(localIP) 
-                             || ownList.get().get((j+2) % ownList.get().size()).getIPAddress().equals(localIP)) || store.get(i).getRedistribute())
+                        if((!(ownList.get().get((j+1) % ownList.get().size()).getIPAddress().equals(localIP) 
+                              || ownList.get().get((j+2) % ownList.get().size()).getIPAddress().equals(localIP))) || store.get(i).getRedistribute())
                         {
                             
                             System.out.println("Our node list:");
@@ -429,7 +430,7 @@ public class KeyValueController<T> {
                             }
 
                             if(store.get(i).getRedistribute()) {
-                                store.get(i).setRedistribute(false);
+                                //store.get(i).setRedistribute(false);
                             }
                             else {
                                 for(int k = 0; k < store.size(); k++) {
