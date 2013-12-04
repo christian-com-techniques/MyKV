@@ -57,7 +57,7 @@ public class MyKV {
 	            
             //The cleanUp may only be called when the membership list got an update
             kvc.cleanUp();
-            
+            kvc_backup.cleanUp();
 
             MembershipList mL = ConnectionHandler.getMembershipList();
             ownList = mL;
