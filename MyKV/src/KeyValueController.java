@@ -37,6 +37,7 @@ public class KeyValueController<T> {
             store.add(entry);
             
             if(!backup) {
+                
                 //Insert backup entries into adjacent nodes
                 for(int i = 0; i < ownList.get().size(); i++) {
                     
@@ -44,11 +45,23 @@ public class KeyValueController<T> {
                     
                     if(ownList.get().get(i).getIPAddress().equals(localIP)) {
                         
-                        String message = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<backup><key>"+String.valueOf(key)+"</key><value>"+value+"</value></backup>\n";
+                        String message = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<backup><key>"
+                            + String.valueOf(key) + "</key><value>" 
+                            + value + "</value></backup>\n";
+                        
                         try {
-                            System.out.println("Sending backups to: " + ownList.get().get((i+1) % ownList.get().size()).getIPAddress() + " and: " + ownList.get().get((i+2) % ownList.get().size()).getIPAddress());
-                            Supplier.send(ownList.get().get((i+1) % ownList.get().size()).getIPAddress(), port, message);
-                            Supplier.send(ownList.get().get((i+2) % ownList.get().size()).getIPAddress(), port, message);
+                            System.out.println("Sending backups to: " 
+                                               + ownList.get().get((i+1) % ownList.get().size()).getIPAddress() + " and: " 
+                                               + ownList.get().get((i+2) % ownList.get().size()).getIPAddress());
+                            Supplier.send(
+                                ownList.get().get((i+1) % ownList.get().size()).getIPAddress(), 
+                                port, 
+                                message);
+                            Supplier.send(
+                                ownList.get().get((i+2) % ownList.get().size()).getIPAddress(), 
+                                port, 
+                                message);
+                        
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -312,59 +325,118 @@ public class KeyValueController<T> {
     	MembershipList ownList = ConnectionHandler.getMembershipList();
     	String localIP = MyKV.getmyIP();
     	
-    	
-        for(int i=0;i<store.size();i++) {
-            int key = store.get(i).getKey();
-            String value = (String)store.get(i).getValue();
+        if(!backup) {
+            //Cleanup our keys. Redistribute mistakenly stored keys, or ones that belong in a recently joined member.
+            for(int i=0;i<store.size();i++) {
+                int key = store.get(i).getKey();
+                String value = (String)store.get(i).getValue();
 			
-            int hash = 0;
-            try {
-                hash = (int)Hash.value(String.valueOf(key), 6);
-            } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
+                int hash = 0;
+                try {
+                    hash = (int)Hash.value(String.valueOf(key), 6);
+                } catch (NoSuchAlgorithmException e) {
+                    e.printStackTrace();
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
 			
-            for(int j=0;j<ownList.get().size();j++) {
+                for(int j=0;j<ownList.get().size();j++) {
 				
-                if(ownList.get().get(j).getID() >= hash) {
-                    String ip = ownList.get().get(j).getIPAddress();
+                    if(ownList.get().get(j).getID() >= hash) {
+                        String ip = ownList.get().get(j).getIPAddress();
 
-                    //We hash all values in our local key-value-store and check, if all the values
-                    //are hashed to our machine (checked by IP). If not, the key-value-pair is sent
-                    //to the machine where it should be according to the local membership list.
-                    //The pair is deleted locally afterwards.
-                    if(!ip.equals(localIP)) {
-                        int port = MyKV.getContactPort();
-                        String message = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<insert><key>"+String.valueOf(key)+"</key><value>"+value+"</value></insert>\n";
-                        try {
-                            Supplier.send(ip, port, message);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-						
-                        for(int k=0;k<store.size();k++) {
-                            if(store.get(k).getKey() == key) {
-                                store.remove(k);
+                        //We hash all values in our local key-value-store and check, if all the values
+                        //are hashed to our machine (checked by IP). If not, the key-value-pair is sent
+                        //to the machine where it should be according to the local membership list.
+                        //The pair is deleted locally afterwards.
+                        if(!ip.equals(localIP)) {
+                            int port = MyKV.getContactPort();
+                            String message = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<insert><key>"+String.valueOf(key)+"</key><value>"+value+"</value></insert>\n";
+                            try {
+                                Supplier.send(ip, port, message);
+                            } catch (IOException e) {
+                                e.printStackTrace();
                             }
-                        }
 						
-                    } 
-                    break;
+                            for(int k=0;k<store.size();k++) {
+                                if(store.get(k).getKey() == key) {
+                                    store.remove(k);
+                                }
+                            }
+						
+                        } 
+                        break;
 	
-                }
+                    }
 				
-                if(j+1 == ownList.get().size()) {
-                    String ip = ownList.get().get(0).getIPAddress();
+                    if(j+1 == ownList.get().size()) {
+                        String ip = ownList.get().get(0).getIPAddress();
 					
+					
+                    }
 					
                 }
-					
             }
+        } else if(backup) {
+            //Cleanup our backup keys. Make sure we're the nodes that are supposed to have the backups.
+            //If not, something like a node drop or join has happened, and we need to redistribute the backup.
+            for(int i=0;i<store.size();i++) {
+                int key = store.get(i).getKey();
+                String value = (String)store.get(i).getValue();
 			
+                int hash = 0;
+                try {
+                    hash = (int)Hash.value(String.valueOf(key), 6);
+                } catch (NoSuchAlgorithmException e) {
+                    e.printStackTrace();
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
 			
+                for(int j=0;j<ownList.get().size();j++) {
+				
+                    if(ownList.get().get(j).getID() >= hash) {
+                        String ip = ownList.get().get(j).getIPAddress();
+
+                        //We hash all values in our local key-value-store and check, if all the values
+                        //are hashed to some machine, that we are one of the next two nodes in the ring. 
+                        //If not, the key-value-pair is sent to the machine where it should be according 
+                        //to the local membership list. The pair is deleted locally afterwards.
+
+                        if(!(ownList.get().get((j+1) % ownList.get().size()).getIPAddress().equals(localIP) 
+                             || ownList.get().get((j+2) % ownList.get().size()).getIPAddress().equals(localIP)))
+                        {
+                            System.out.println("Backup of Key: " + Integer.toString(key) + " Value: " + value + " does not belong here. Sending backup to owning node: " + ip);
+                            String message = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<insert><key>"+String.valueOf(key)+"</key><value>"+value+"</value></insert>\n";
+                            int port = MyKV.getContactPort();
+
+                            try {
+                                Supplier.send(ip, port, message);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+                            for(int k = 0; k < store.size(); k++) {
+                                if(store.get(k).getKey() == key) {
+                                    store.remove(k);
+                                }
+                            }
+                            
+                        }
+                        break;
+                        
+                    }
+				
+                    if(j+1 == ownList.get().size()) {
+                        String ip = ownList.get().get(0).getIPAddress();
+					
+					
+                    }
+					
+                }
+            }
         }
+        
     }
 	
     //Returns the whole local key-value store
