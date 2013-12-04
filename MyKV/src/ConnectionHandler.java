@@ -161,7 +161,7 @@ public class ConnectionHandler implements Runnable {
             	//KeyValueController<String> kvc = new KeyValueController<String>();
             	kvc.insert(key, value, true);
             	
-                System.out.println("Key: " + Integer.toString(key) + " | Value: " + value + " inserted.");
+                //System.out.println("Key: " + Integer.toString(key) + " | Value: " + value + " inserted.");
             
             } else if (a.getNodeName() == "backup") {
                 NodeList n = a.getChildNodes();
@@ -179,7 +179,7 @@ public class ConnectionHandler implements Runnable {
 
                 kvc_backup.insert(key, value, true);
             	
-                System.out.println("Key: " + Integer.toString(key) + " | Value: " + value + " inserted as backup.");
+                //System.out.println("Key: " + Integer.toString(key) + " | Value: " + value + " inserted as backup.");
                 
             } else if(a.getNodeName() == "delete") {
             

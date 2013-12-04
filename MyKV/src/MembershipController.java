@@ -160,7 +160,7 @@ public class MembershipController {
                     for(int j = 0; j < ownMemList.size(); j++) {
                         if(ownMemList.get(j).getID() >= hash) {
                             if(j == i) {
-                                System.out.println("Marking Key: " + entry.getKey() + " Value: " + entry.getValue() + " to redistribute.");
+                                //System.out.println("Marking Key: " + entry.getKey() + " Value: " + entry.getValue() + " to redistribute.");
                                 entry.setRedistribute(true);
                             }
                             break;
@@ -168,7 +168,7 @@ public class MembershipController {
                     }
                 }
                 
-                System.out.println("Removing Node: " + ownMemList.get(i).getIPAddress());
+//                System.out.println("Removing Node: " + ownMemList.get(i).getIPAddress());
                 ownMemList.remove(i);
                 continue;
                     
