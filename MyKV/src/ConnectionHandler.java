@@ -26,6 +26,11 @@ public class ConnectionHandler implements Runnable {
     private Config conf;
     private int bufferSize = 2048;
     private static MembershipList list = new MembershipList();
+    private KeyValueController<String> kvc;
+
+    public ConnectionHandler(KeyValueController<String> keyValueController) {
+        kvc = keyValueController;
+    }
     
     public ConnectionHandler(Config conf) {
     	this.conf = conf;
@@ -153,7 +158,7 @@ public class ConnectionHandler implements Runnable {
             	//Here I assume, that the values are just strings. By calling Str.isInteger / Str.isDouble
             	// it is possible to make a roughly check if the input is an int or double. It would be
             	//possible to save the data in the correct format since generics are used in KVEntry
-            	KeyValueController<String> kvc = new KeyValueController<String>();
+            	//KeyValueController<String> kvc = new KeyValueController<String>();
             	kvc.insert(key, value, true);
             	
             
@@ -168,7 +173,7 @@ public class ConnectionHandler implements Runnable {
                 	}
             	}
             	
-            	KeyValueController<String> kvc = new KeyValueController<String>();
+            	//KeyValueController<String> kvc = new KeyValueController<String>();
             	kvc.delete(key, true);
             	
             } else if(a.getNodeName() == "update") {
@@ -186,7 +191,7 @@ public class ConnectionHandler implements Runnable {
                 	}
             	}
 
-            	KeyValueController<String> kvc = new KeyValueController<String>();
+            	//KeyValueController<String> kvc = new KeyValueController<String>();
             	kvc.update(key, value, true);
             	
             } else if(a.getNodeName() == "lookup") {
@@ -209,7 +214,7 @@ public class ConnectionHandler implements Runnable {
                 	String senderIP = packet.getAddress().getHostAddress();
                 	int senderPort = packet.getPort();
             		
-	            	KeyValueController<String> kvc = new KeyValueController<String>();
+	            	//KeyValueController<String> kvc = new KeyValueController<String>();
 	            	kvc.lookup(key, true, senderIP);
 	            	
             	} else if(type.equals("receive")) {
@@ -227,7 +232,7 @@ public class ConnectionHandler implements Runnable {
             	
             } else if(a.getNodeName() == "show") {
                 
-            	KeyValueController<String> kvc = new KeyValueController<String>();
+            	//KeyValueController<String> kvc = new KeyValueController<String>();
             	ArrayList<KVEntry<String>> al = kvc.showStore();
             	
             	System.out.println("Local Key-Values ------------------------");

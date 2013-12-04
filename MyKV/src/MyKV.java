@@ -38,12 +38,13 @@ public class MyKV {
         if(myIP.equals(contactIP))
             ownList.add(id, myIP);
 	        
-	        
+        KeyValueController<String> kvc = new KeyValueController<String>();
+
         ConnectionHandler connectionHandler = new ConnectionHandler(conf);
         Thread handlerThread = new Thread(connectionHandler, "Connection Handler");
         handlerThread.start();
 	        
-        UserinputHandler userinputHandler = new UserinputHandler();
+        UserinputHandler userinputHandler = new UserinputHandler(kvc);
         Thread userinputThread = new Thread(userinputHandler, "Userinput Handler");
         userinputThread.start();
 	        
