@@ -7,10 +7,13 @@ import java.util.ArrayList;
 public class KeyValueController<T> {
 
     private ArrayList<KVEntry<T>> store;
-    
+    private Boolean backup = false;
+
     public KeyValueController() {
         store = new ArrayList<KVEntry<T>>();
     }
+
+    public void setBackup(Boolean value) { backup = value; }
 
     public void insert(int key, T value, boolean insertHere) {
 
@@ -33,20 +36,23 @@ public class KeyValueController<T> {
 			
             store.add(entry);
             
-            //Insert backup entries into adjacent nodes
-            for(int i = 0; i < ownList.get().size(); i++) {
-                
-                System.out.println("Checking ip: " + ownList.get().get(i).getIPAddress() + " against my IP: " + localIP);
-                
-                if(ownList.get().get(i).getIPAddress().equals(localIP)) {
+            if(!backup) {
+                //Insert backup entries into adjacent nodes
+                for(int i = 0; i < ownList.get().size(); i++) {
                     
-                    String message = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<backup><key>"+String.valueOf(key)+"</key><value>"+value+"</value></backup>\n";
-                    try {
-                        System.out.println("Sending backups to: " + ownList.get().get(i+1 % ownList.get().size()).getIPAddress() + " and: " + ownList.get().get(i+2 % ownList.get().size()).getIPAddress());
-                        Supplier.send(ownList.get().get(i+1 % ownList.get().size()).getIPAddress(), port, message);
-                        Supplier.send(ownList.get().get(i+2 % ownList.get().size()).getIPAddress(), port, message);
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    System.out.println("Checking ip: " + ownList.get().get(i).getIPAddress() + " against my IP: " + localIP);
+                    
+                    if(ownList.get().get(i).getIPAddress().equals(localIP)) {
+                        
+                        String message = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<backup><key>"+String.valueOf(key)+"</key><value>"+value+"</value></backup>\n";
+                        try {
+                            System.out.println("Sending backups to: " + ownList.get().get(i+1 % ownList.get().size()).getIPAddress() + " and: " + ownList.get().get(i+2 % ownList.get().size()).getIPAddress());
+                            Supplier.send(ownList.get().get(i+1 % ownList.get().size()).getIPAddress(), port, message);
+                            Supplier.send(ownList.get().get(i+2 % ownList.get().size()).getIPAddress(), port, message);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        break;
                     }
                 }
             }

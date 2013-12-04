@@ -33,6 +33,7 @@ public class ConnectionHandler implements Runnable {
     	this.conf = conf;
         kvc = keyValueController;
         kvc_backup = new KeyValueController<String>();
+        kvc_backup.setBackup(true);
     }
     
     @Override
