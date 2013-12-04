@@ -25,6 +25,10 @@ public class KeyValueController<T> {
             }
 			
             store.add(entry);
+            
+            //Insert backup entries into adjacent nodes
+            
+
             return;
         }
 		
@@ -50,6 +54,8 @@ public class KeyValueController<T> {
 			
             if(ownList.get().get(i).getID() >= hash) {
                 String ip = ownList.get().get(i).getIPAddress();
+
+                System.out.println("Sending Key: " + key + " Value: " + value + " to: " + ip);
 				
                 String message = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<insert><key>"+String.valueOf(key)+"</key><value>"+value+"</value></insert>\n";
                 try {

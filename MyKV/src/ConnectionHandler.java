@@ -33,12 +33,12 @@ public class ConnectionHandler implements Runnable {
         kvc = keyValueController;
     }
     
-	@Override
-	public void run() {
+    @Override
+    public void run() {
 		
-		int port = conf.intFor("contactPort");
+        int port = conf.intFor("contactPort");
 		
-		DatagramSocket rcvSocket = null;
+        DatagramSocket rcvSocket = null;
         try {
             rcvSocket = new DatagramSocket(port);
         } catch (SocketException e1) {
@@ -87,50 +87,50 @@ public class ConnectionHandler implements Runnable {
                 String newMember = packet.getAddress().getHostAddress();
                 
     	        int id = 0;
-				try {
-					id = (int)(Hash.value(newMember, 6));
-				} catch (NoSuchAlgorithmException e1) {
-					e1.printStackTrace();
-				} catch (UnsupportedEncodingException e1) {
-					e1.printStackTrace();
-				}
+                try {
+                    id = (int)(Hash.value(newMember, 6));
+                } catch (NoSuchAlgorithmException e1) {
+                    e1.printStackTrace();
+                } catch (UnsupportedEncodingException e1) {
+                    e1.printStackTrace();
+                }
                 
-                //System.out.println(newMember + " is joining the cluster.");
+                System.out.println(newMember + " is joining the cluster.");
 				
-				if(!list.ipExists(newMember)) {
+                if(!list.ipExists(newMember)) {
 					
-	                list.add(id, newMember);
+                    list.add(id, newMember);
 
-	                ArrayList<MembershipEntry> memList = list.get();
+                    ArrayList<MembershipEntry> memList = list.get();
 
-	                try {
-	                    String marshalledMessage = DstrMarshaller.toXML(memList);
-	                    Supplier.send(newMember, port, marshalledMessage);
-	                } catch (IOException e) {
-	                    e.printStackTrace();
-	                } catch (JAXBException e) {
-	                    e.printStackTrace();
-	                }
+                    try {
+                        String marshalledMessage = DstrMarshaller.toXML(memList);
+                        Supplier.send(newMember, port, marshalledMessage);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (JAXBException e) {
+                        e.printStackTrace();
+                    }
 					
-				}
+                }
 
                 
                 
                 // Go this way, when the node receives a leave-request from another node
             } else if(a.getNodeName() == "leave") {
                 
-                    // Go this way, when the node gets a membershiplist from another node
+                // Go this way, when the node gets a membershiplist from another node
             } else if(a.getNodeName() == "membershipList") {
                     
-                    ArrayList<MembershipEntry> receivedMemList = new ArrayList<MembershipEntry>();
+                ArrayList<MembershipEntry> receivedMemList = new ArrayList<MembershipEntry>();
                 
-                    try {
+                try {
                     receivedMemList = DstrMarshaller.unmarshallXML(msg);
                 } catch (JAXBException e) {
                     e.printStackTrace();
                 }
                     
-                    MembershipController.updateMembershipList(list, receivedMemList);
+                MembershipController.updateMembershipList(list, receivedMemList);
                 
             }
             
@@ -144,12 +144,12 @@ public class ConnectionHandler implements Runnable {
             	String value = null;
             	
             	for(int i=0;i<n.getLength();i++) {
-                	if(n.item(i).getNodeName().equals("key")) {
-                		key = Integer.valueOf(n.item(i).getTextContent());
-                	}
-                	if(n.item(i).getNodeName().equals("value")) {
-                		value = n.item(i).getTextContent();
-                	}
+                    if(n.item(i).getNodeName().equals("key")) {
+                        key = Integer.valueOf(n.item(i).getTextContent());
+                    }
+                    if(n.item(i).getNodeName().equals("value")) {
+                        value = n.item(i).getTextContent();
+                    }
             	}
 
             	//Here I assume, that the values are just strings. By calling Str.isInteger / Str.isDouble
@@ -158,6 +158,7 @@ public class ConnectionHandler implements Runnable {
             	//KeyValueController<String> kvc = new KeyValueController<String>();
             	kvc.insert(key, value, true);
             	
+                System.out.println("Key: " + Integer.toString(key) + " | Value: " + value + " inserted.");
             
             } else if(a.getNodeName() == "delete") {
             
@@ -165,14 +166,16 @@ public class ConnectionHandler implements Runnable {
             	int key = 0;
             	
             	for(int i=0;i<n.getLength();i++) {
-                	if(n.item(i).getNodeName().equals("key")) {
-                		key = Integer.valueOf(n.item(i).getTextContent());
-                	}
+                    if(n.item(i).getNodeName().equals("key")) {
+                        key = Integer.valueOf(n.item(i).getTextContent());
+                    }
             	}
             	
             	//KeyValueController<String> kvc = new KeyValueController<String>();
             	kvc.delete(key, true);
-            	
+
+                System.out.println("Key: " + Integer.toString(key) + " deleted.");
+
             } else if(a.getNodeName() == "update") {
                 
             	NodeList n = a.getChildNodes();
@@ -180,17 +183,19 @@ public class ConnectionHandler implements Runnable {
             	String value = null;
             	
             	for(int i=0;i<n.getLength();i++) {
-                	if(n.item(i).getNodeName().equals("key")) {
-                		key = Integer.valueOf(n.item(i).getTextContent());
-                	}
-                	if(n.item(i).getNodeName().equals("value")) {
-                		value = n.item(i).getTextContent();
-                	}
+                    if(n.item(i).getNodeName().equals("key")) {
+                        key = Integer.valueOf(n.item(i).getTextContent());
+                    }
+                    if(n.item(i).getNodeName().equals("value")) {
+                        value = n.item(i).getTextContent();
+                    }
             	}
 
             	//KeyValueController<String> kvc = new KeyValueController<String>();
             	kvc.update(key, value, true);
             	
+                System.out.println("Key: " + Integer.toString(key) + " | Value: " + value + " updated.");
+
             } else if(a.getNodeName() == "lookup") {
                 
             	NodeList n = a.getChildNodes();
@@ -198,33 +203,35 @@ public class ConnectionHandler implements Runnable {
             	String type = null;
             	
             	for(int i=0;i<n.getLength();i++) {
-                	if(n.item(i).getNodeName().equals("key")) {
-                		key = Integer.valueOf(n.item(i).getTextContent());
-                	}
-                	if(n.item(i).getNodeName().equals("type")) {
-                		type = n.item(i).getTextContent();
-                	}
+                    if(n.item(i).getNodeName().equals("key")) {
+                        key = Integer.valueOf(n.item(i).getTextContent());
+                    }
+                    if(n.item(i).getNodeName().equals("type")) {
+                        type = n.item(i).getTextContent();
+                    }
             	}
+
+                System.out.println("Key: " + Integer.toString(key) + " lookup.");
 
             	if(type.equals("send")) {
             		
-                	String senderIP = packet.getAddress().getHostAddress();
-                	int senderPort = packet.getPort();
+                    String senderIP = packet.getAddress().getHostAddress();
+                    int senderPort = packet.getPort();
             		
-	            	//KeyValueController<String> kvc = new KeyValueController<String>();
-	            	kvc.lookup(key, true, senderIP);
+                    //KeyValueController<String> kvc = new KeyValueController<String>();
+                    kvc.lookup(key, true, senderIP);
 	            	
             	} else if(type.equals("receive")) {
-                	String value = null;
-                	for(int i=0;i<n.getLength();i++) {
+                    String value = null;
+                    for(int i=0;i<n.getLength();i++) {
                     	if(n.item(i).getNodeName().equals("value")) {
-                    		value = n.item(i).getTextContent();
+                            value = n.item(i).getTextContent();
                     	}
-                	}
+                    }
                 	
-                	System.out.println("key: "+String.valueOf(key)+", value: "+value);
+                    System.out.println("key: "+String.valueOf(key)+", value: "+value);
             	} else if(type.equals("null")) {
-            		System.out.println("Key does not exist");
+                    System.out.println("Key does not exist");
             	}
             	
             } else if(a.getNodeName() == "show") {
@@ -235,7 +242,7 @@ public class ConnectionHandler implements Runnable {
             	System.out.println("Local Key-Values ------------------------");
             	
             	for(int i=0;i<al.size();i++) {
-            		System.out.println("key: "+al.get(i).getKey()+", value: "+al.get(i).getValue());
+                    System.out.println("key: "+al.get(i).getKey()+", value: "+al.get(i).getValue());
             	}
             	
             	System.out.println("Membershiplist --------------------------");
@@ -244,7 +251,7 @@ public class ConnectionHandler implements Runnable {
             	ArrayList<MembershipEntry> memList = ml.get();
             	
             	for(int i=0;i<memList.size();i++) {
-            		System.out.println("IP: "+memList.get(i).getIPAddress());
+                    System.out.println("IP: "+memList.get(i).getIPAddress());
             	}
             	
             }
@@ -253,11 +260,11 @@ public class ConnectionHandler implements Runnable {
             
         }
 		
-	}
+    }
 	
-	public static MembershipList getMembershipList() {
-		return list;
-	}
+    public static MembershipList getMembershipList() {
+        return list;
+    }
 
     public void kill() {
         this.shouldRun = false;
