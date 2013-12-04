@@ -44,8 +44,8 @@ public class MembershipController {
         //If we're the only one in the group that we know of, let's join!
         if(memList.size() <= 1) {
             //if(!contactIP.equals(ownIP)) {
-                //System.out.println("Joining! " + ownIP + " -> " + contactIP);
-                sendJoinGroup(contactIP, contactPort);
+            //System.out.println("Joining! " + ownIP + " -> " + contactIP);
+            sendJoinGroup(contactIP, contactPort);
             //}
             return;
         }
@@ -86,9 +86,9 @@ public class MembershipController {
         
         
     public static void updateMembershipList(MembershipList own, ArrayList<MembershipEntry> receivedMemList) {
-            ArrayList<MembershipEntry> ownMemList = own.get();
+        ArrayList<MembershipEntry> ownMemList = own.get();
         
-            for(int i = 0;i < receivedMemList.size();i++) {
+        for(int i = 0;i < receivedMemList.size();i++) {
             
             //Keep track of whether or not we're already tracking each node in the received member list.
             boolean ownMemListContainsReceived = false;
@@ -130,53 +130,51 @@ public class MembershipController {
                 //ownMemList.add(receivedMemList.get(i));
                 own.add(receivedMemList.get(i));
             }
-            }        
+        }        
     }
     
     public static void trackFailing(MembershipList own, int failSeconds, KeyValueController<String> kvc_backup) {
         //In this loop, we mark all nodes as failed which are older than currentTime minus failSeconds.
-            //If a node is marked as failed and the lastUpdate timestamp is older than currentTime - (failSeconds * 2) sec, it is deleted.
+        //If a node is marked as failed and the lastUpdate timestamp is older than currentTime - (failSeconds * 2) sec, it is deleted.
 
         ArrayList<MembershipEntry> ownMemList = own.get();
             
-            for(int i = 0;i < ownMemList.size();i++) {
-                long currentTime = new Date().getTime()/1000;
-                long lastUpdate = ownMemList.get(i).getLastupdtstamp();
-                boolean failedFlag = ownMemList.get(i).getFailedFlag();
+        for(int i = 0;i < ownMemList.size();i++) {
+            long currentTime = new Date().getTime()/1000;
+            long lastUpdate = ownMemList.get(i).getLastupdtstamp();
+            boolean failedFlag = ownMemList.get(i).getFailedFlag();
                 
-                if(currentTime - (failSeconds * 2) > lastUpdate && failedFlag == true) {
-                    ownMemList.remove(i);
-                    continue;
+            if(currentTime - (failSeconds * 2) > lastUpdate && failedFlag == true) {
+                ownMemList.remove(i);
+                continue;
                     
-                } else if(currentTime - failSeconds > lastUpdate && failedFlag == false) {
-                    ownMemList.get(i).setFailedFlag(true);
-                    //Check if we own any backups from the failed node, and mark them for redistribution.
-                    ArrayList<KVEntry<String>> entries = kvc_backup.showStore();
-                    for(KVEntry<String> entry : entries) {
-                        int hash = 0;
-                        try {
-                            hash = (int)Hash.value(String.valueOf(entry.getKey()), 6);
-                        } catch (NoSuchAlgorithmException e) {
-                            e.printStackTrace();
-                        } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
-                        }
+            } else if(currentTime - failSeconds > lastUpdate && failedFlag == false) {
+                ownMemList.get(i).setFailedFlag(true);
+                //Check if we own any backups from the failed node, and mark them for redistribution.
+                ArrayList<KVEntry<String>> entries = kvc_backup.showStore();
+                for(KVEntry<String> entry : entries) {
+                    int hash = 0;
+                    try {
+                        hash = (int)Hash.value(String.valueOf(entry.getKey()), 6);
+                    } catch (NoSuchAlgorithmException e) {
+                        e.printStackTrace();
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
 
-                        for(int j = 0; j < ownMemList.size(); j++) {
-                            if(ownMemList.get(j).getID() >= hash) {
-                                if(j == i) {
-                                    System.out.println("Marking Key: " + entry.getKey() + " Value: " + entry.getValue() + " to redistribute.");
-                                    entry.setRedistribute(true);
-                                }
-                                break;
+                    for(int j = 0; j < ownMemList.size(); j++) {
+                        if(ownMemList.get(j).getID() >= hash) {
+                            if(j == i) {
+                                System.out.println("Marking Key: " + entry.getKey() + " Value: " + entry.getValue() + " to redistribute.");
+                                entry.setRedistribute(true);
                             }
+                            break;
                         }
-                }
-                System.out.println("Redistributing backup keys after failed node.");
-                
+                    }
+                }                
             }
             //System.out.print("ID: "+own.get().get(i).getID() + ", IP: " + own.get().get(i).getIPAddress() + " (" + !own.get().get(i).getFailedFlag() + ") ");
-            }
+        }
         //System.out.println("");
     }
 

@@ -63,8 +63,6 @@ public class MembershipList {
         }
     }
     
-    
-    
 
     public ArrayList<MembershipEntry> get() {
         return membershipList;

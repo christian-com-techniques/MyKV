@@ -26,4 +26,8 @@ public class KVEntry<T> {
     public void setRedistribute(Boolean value) {
         this.redistribute = value;
     }
+    
+    public Boolean getRedistribute() {
+        return this.redistribute;
+    }
 }
