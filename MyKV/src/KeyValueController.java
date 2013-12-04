@@ -26,18 +26,8 @@ public class KeyValueController<T> {
             System.out.println("insertHere hit.");
 
             KVEntry<T> entry = new KVEntry<T>(key, value);
-			
-            //If key already exists in store, do nothing
-            for(int i=0;i<store.size();i++) {
-                if(store.get(i).getKey() == key) {
-                    store.get(i).setRedistribute(false);
-                    return;
-                }
-            }
-			
-            store.add(entry);
-            
-            if(!backup) {
+
+                        if(!backup) {
                 
                 //Insert backup entries into adjacent nodes
                 for(int i = 0; i < ownList.get().size(); i++) {
@@ -70,7 +60,17 @@ public class KeyValueController<T> {
                     }
                 }
             }
-
+			
+            //If key already exists in store, do nothing
+            for(int i=0;i<store.size();i++) {
+                if(store.get(i).getKey() == key) {
+                    store.get(i).setRedistribute(false);
+                    return;
+                }
+            }
+			
+            store.add(entry);
+            
             return;
         }
 		
