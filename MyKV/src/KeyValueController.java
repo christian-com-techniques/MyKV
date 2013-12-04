@@ -386,7 +386,9 @@ public class KeyValueController<T> {
             for(int i=0;i<store.size();i++) {
                 int key = store.get(i).getKey();
                 String value = (String)store.get(i).getValue();
-			
+
+                System.out.println("Checking: " + key + " " + value);
+
                 int hash = 0;
                 try {
                     hash = (int)Hash.value(String.valueOf(key), 6);
@@ -405,6 +407,8 @@ public class KeyValueController<T> {
                         //are hashed to some machine, that we are one of the next two nodes in the ring. 
                         //If not, the key-value-pair is sent to the machine where it should be according 
                         //to the local membership list. The pair is deleted locally afterwards.
+                        
+                        
 
                         if((!(ownList.get().get((j+1) % ownList.get().size()).getIPAddress().equals(localIP) 
                               || ownList.get().get((j+2) % ownList.get().size()).getIPAddress().equals(localIP))) || store.get(i).getRedistribute())
