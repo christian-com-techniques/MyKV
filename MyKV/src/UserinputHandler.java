@@ -139,7 +139,7 @@ public class UserinputHandler implements Runnable {
      		} else if(cm[0].equals("show")) {
      			
             	KeyValueController<String> kvc = new KeyValueController<String>();
-            	ArrayList<KVEntry> al = kvc.showStore();
+            	ArrayList<KVEntry<String>> al = kvc.showStore();
 
             	System.out.println("Local Key-Values ------------------------");
             	

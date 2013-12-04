@@ -228,7 +228,7 @@ public class ConnectionHandler implements Runnable {
             } else if(a.getNodeName() == "show") {
                 
             	KeyValueController<String> kvc = new KeyValueController<String>();
-            	ArrayList<KVEntry> al = kvc.showStore();
+            	ArrayList<KVEntry<String>> al = kvc.showStore();
             	
             	System.out.println("Local Key-Values ------------------------");
             	
