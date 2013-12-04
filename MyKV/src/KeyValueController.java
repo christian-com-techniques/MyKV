@@ -92,7 +92,7 @@ public class KeyValueController<T> {
             if(ownList.get().get(i).getID() >= hash) {
                 String ip = ownList.get().get(i).getIPAddress();
 
-                System.out.println("Sending Key: " + key + " Value: " + value + " to: " + ip);
+                System.out.println("Sending Key: " + key + " Value: " + value + " Hash: " + hash + " to: " + ip);
 				
                 String message = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<insert><key>"+String.valueOf(key)+"</key><value>"+value+"</value></insert>\n";
                 try {
