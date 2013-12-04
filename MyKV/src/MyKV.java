@@ -39,8 +39,10 @@ public class MyKV {
             ownList.add(id, myIP);
 	        
         KeyValueController<String> kvc = new KeyValueController<String>();
-
-        ConnectionHandler connectionHandler = new ConnectionHandler(conf, kvc);
+        KeyValueController<String> kvc_backup = new KeyValueController<String>();
+        kvc_backup.setBackup(true);
+        
+        ConnectionHandler connectionHandler = new ConnectionHandler(conf, kvc, kvc_backup);
         Thread handlerThread = new Thread(connectionHandler, "Connection Handler");
         handlerThread.start();
 	        
@@ -50,13 +52,13 @@ public class MyKV {
 	        
         while(running) {
             ownList.incrHeartbeatCounter(myIP);
-            KeyValueController kv = new KeyValueController();
             MembershipController.trackFailing(ownList, conf.intFor("TFail")/1000);
             MembershipController.sendGossip(ownList, contactIP, contactPort, myIP);
 	            
             //The cleanUp may only be called when the membership list got an update
-            kv.cleanUp();
-	            
+            kvc.cleanUp();
+            
+
             MembershipList mL = ConnectionHandler.getMembershipList();
             ownList = mL;
             Thread.sleep(conf.intFor("TGossip"));

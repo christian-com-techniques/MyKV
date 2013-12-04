@@ -29,10 +29,10 @@ public class ConnectionHandler implements Runnable {
     private KeyValueController<String> kvc;
     private KeyValueController<String> kvc_backup;
     
-    public ConnectionHandler(Config conf, KeyValueController<String> keyValueController) {
+    public ConnectionHandler(Config conf, KeyValueController<String> keyValueController, KeyValueController<String> keyValueController_Backup) {
     	this.conf = conf;
         kvc = keyValueController;
-        kvc_backup = new KeyValueController<String>();
+        kvc_backup = keyValueController_Backup;
         kvc_backup.setBackup(true);
     }
     
