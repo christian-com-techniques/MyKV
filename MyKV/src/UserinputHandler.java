@@ -134,9 +134,17 @@ public class UserinputHandler implements Runnable {
                     System.out.println("Not a valid argument.\nSyntax: lookup <key>");
                     continue;
                 }
-     			
-                int key = Integer.parseInt(cm[1]);
-     			
+     		
+                
+                int key;
+                try {
+                    key = Integer.parseInt(cm[1]);
+     		} catch (NumberFormatException e) {
+                    System.out.println("Key must be a number.\nSyntax: lookup <key>");
+                    continue;
+                }
+                
+
             	//KeyValueController<String> kvc = new KeyValueController<String>();
             	kvc.lookup(key, false, "");
             
