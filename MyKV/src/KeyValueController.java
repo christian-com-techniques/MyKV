@@ -406,6 +406,12 @@ public class KeyValueController<T> {
                         if(!(ownList.get().get((j+1) % ownList.get().size()).getIPAddress().equals(localIP) 
                              || ownList.get().get((j+2) % ownList.get().size()).getIPAddress().equals(localIP)))
                         {
+                    
+                            println("Our node list:");
+                            for(int k = 0; k < ownList.get().size(); k++)
+                            {
+                                System.out.println(ownList.get().get(k).getIPAddress());
+                            }
                             
                             System.out.println("Backup of Key: " + Integer.toString(key) + " Value: " + value + " does not belong here.");
                             System.out.println("Backups belong at: " + ownList.get().get((j+2) % ownList.get().size()).getIPAddress() + " and " + ownList.get().get((j+1) % ownList.get().size()).getIPAddress());
