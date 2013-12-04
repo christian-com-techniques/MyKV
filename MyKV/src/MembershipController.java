@@ -167,7 +167,8 @@ public class MembershipController {
                         }
                     }
                 }
-
+                
+                System.out.println("Removing Node: " + ownMemList.get(i).getIPAddress());
                 ownMemList.remove(i);
                 continue;
                     

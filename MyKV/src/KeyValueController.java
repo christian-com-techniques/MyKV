@@ -408,7 +408,7 @@ public class KeyValueController<T> {
                         if(!(ownList.get().get((j+1) % ownList.get().size()).getIPAddress().equals(localIP) 
                              || ownList.get().get((j+2) % ownList.get().size()).getIPAddress().equals(localIP)) || store.get(i).getRedistribute())
                         {
-                            store.get(i).setRedistribute(false);
+                            
                             System.out.println("Our node list:");
                             for(int k = 0; k < ownList.get().size(); k++)
                             {
@@ -428,9 +428,12 @@ public class KeyValueController<T> {
                                 e.printStackTrace();
                             }
 
-                            for(int k = 0; k < store.size(); k++) {
-                                if(store.get(k).getKey() == key) {
-                                    store.remove(k);
+                            if(store.get(i).getRedistribute()) {
+                                store.get(i).setRedistribute(false);
+                                for(int k = 0; k < store.size(); k++) {
+                                    if(store.get(k).getKey() == key) {
+                                        store.remove(k);
+                                    }
                                 }
                             }
                             
