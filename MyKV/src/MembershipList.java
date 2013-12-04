@@ -28,38 +28,39 @@ public class MembershipList {
         
         //System.out.println("Adding: " + ip);
         MembershipEntry mE = new MembershipEntry(id, ip);
-
         System.out.println("Inserting IP: " + ip + " ID: " + id);
+        this.add(mE);
+    }
+
+    public void add(MembershipEntry mE) {
+         
 
         if(membershipList.size() == 0) {
             membershipList.add(mE);
             
         } else {
-        
-        	//We use this to make sure, the membershipList is sorted by ID all the time.
-        	//If a new value is added and the successor-id is greater than the current id,
-        	//the current node is added at position i and the node with an higher ID than
-        	//i is shifted to the right.
-	        for(int i=0;i<membershipList.size();i++) {
-
-                    System.out.println("Comparing entry: " + membershipList.get(i).getIPAddress() + " ID: " + membershipList.get(i).getID());
+            
+            //We use this to make sure, the membershipList is sorted by ID all the time.
+            //If a new value is added and the successor-id is greater than the current id,
+            //the current node is added at position i and the node with an higher ID than
+            //i is shifted to the right.
+            for(int i=0;i<membershipList.size();i++) {
+                
+                System.out.println("Comparing entry: " + membershipList.get(i).getIPAddress() + " ID: " + membershipList.get(i).getID());
                     
-	            if(membershipList.get(i).getID() > id) {
-	            	System.out.println("Inserting here.");
-                        membershipList.add(i, mE);
-	            	break;
-	            } 
+                if(membershipList.get(i).getID() > mE.getID()) {
+                    System.out.println("Inserting here.");
+                    membershipList.add(i, mE);
+                    break;
+                } 
 	            
-	        	if(i+1 == membershipList.size()) {
-	        		membershipList.add(i+1, mE);
-	        		break;
-	        	}
-	        }
+                if(i+1 == membershipList.size()) {
+                    membershipList.add(i+1, mE);
+                    break;
+                }
+            }
 	        
         }
-
-        
-        
     }
     
     
@@ -73,9 +74,9 @@ public class MembershipList {
     public boolean ipExists(String ip) {
         
     	for(int i=0;i<membershipList.size();i++) {
-    		if(membershipList.get(i).getIPAddress().equals(ip)) {
-    			return true;
-    		}
+            if(membershipList.get(i).getIPAddress().equals(ip)) {
+                return true;
+            }
     	}
     	
     	return false;

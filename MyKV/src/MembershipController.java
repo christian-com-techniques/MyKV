@@ -125,7 +125,8 @@ public class MembershipController {
             if(!ownMemListContainsReceived && !receivedMemList.get(i).getFailedFlag()) {
                 System.out.println(receivedMemList.get(i).getIPAddress() + " is not in our list. Adding.");
                 long currentTime = new Date().getTime()/1000;
-                ownMemList.add(receivedMemList.get(i));
+                //ownMemList.add(receivedMemList.get(i));
+                own.add(receivedMemList.get(i));
             }
             }        
     }
