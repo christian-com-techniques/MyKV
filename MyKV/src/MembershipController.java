@@ -146,10 +146,7 @@ public class MembershipController {
                 
             if(currentTime - (failSeconds * 2) > lastUpdate && failedFlag == true) {
                 ownMemList.remove(i);
-                continue;
-                    
-            } else if(currentTime - failSeconds > lastUpdate && failedFlag == false) {
-                ownMemList.get(i).setFailedFlag(true);
+
                 //Check if we own any backups from the failed node, and mark them for redistribution.
                 ArrayList<KVEntry<String>> entries = kvc_backup.showStore();
                 for(KVEntry<String> entry : entries) {
@@ -171,7 +168,13 @@ public class MembershipController {
                             break;
                         }
                     }
-                }                
+                }
+
+                continue;
+                    
+            } else if(currentTime - failSeconds > lastUpdate && failedFlag == false) {
+                ownMemList.get(i).setFailedFlag(true);
+                
             }
             //System.out.print("ID: "+own.get().get(i).getID() + ", IP: " + own.get().get(i).getIPAddress() + " (" + !own.get().get(i).getFailedFlag() + ") ");
         }
