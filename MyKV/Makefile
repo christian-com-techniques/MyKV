@@ -1,5 +1,5 @@
 JAVAC = javac
-JAVACFLAGS = -d bin/
+JAVACFLAGS = -d bin/ -Xlint:unchecked
 
 
 all : clean classfiles

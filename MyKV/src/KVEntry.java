@@ -1,25 +1,29 @@
 
 public class KVEntry<T> {
 
-	private int key;
-	private T value;
+    private int key;
+    private T value;
+    private Boolean redistribute;
 	
+    public KVEntry(int key, T value) {
+        this.key = key;
+        this.value = value;
+        this.redistribute = false;
+    }
 	
-	public KVEntry(int key, T value) {
-		this.key = key;
-		this.value = value;
-	}
+    public int getKey() {
+        return key;
+    }
 	
-	public int getKey() {
-		return key;
-	}
+    public T getValue() {
+        return value;
+    }
 	
-	public T getValue() {
-		return value;
-	}
+    public void setValue(T value) {
+        this.value = value;
+    }
 	
-	public void setValue(T value) {
-		this.value = value;
-	}
-	
+    public void setRedistribute(Boolean value) {
+        this.redistribute = value;
+    }
 }

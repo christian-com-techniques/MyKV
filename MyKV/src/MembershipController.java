@@ -3,6 +3,8 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 
 import javax.xml.bind.JAXBException;
 
@@ -131,23 +133,47 @@ public class MembershipController {
             }        
     }
     
-    public static void trackFailing(MembershipList own, int failSeconds) {
+    public static void trackFailing(MembershipList own, int failSeconds, KeyValueController<String> kvc_backup) {
         //In this loop, we mark all nodes as failed which are older than currentTime minus failSeconds.
             //If a node is marked as failed and the lastUpdate timestamp is older than currentTime - (failSeconds * 2) sec, it is deleted.
 
         ArrayList<MembershipEntry> ownMemList = own.get();
             
             for(int i = 0;i < ownMemList.size();i++) {
-            long currentTime = new Date().getTime()/1000;
-            long lastUpdate = ownMemList.get(i).getLastupdtstamp();
-            boolean failedFlag = ownMemList.get(i).getFailedFlag();
-            
-            if(currentTime - (failSeconds * 2) > lastUpdate && failedFlag == true) {
-                ownMemList.remove(i);
-                continue;
+                long currentTime = new Date().getTime()/1000;
+                long lastUpdate = ownMemList.get(i).getLastupdtstamp();
+                boolean failedFlag = ownMemList.get(i).getFailedFlag();
+                
+                if(currentTime - (failSeconds * 2) > lastUpdate && failedFlag == true) {
+                    ownMemList.remove(i);
+                    continue;
                     
-            } else if(currentTime - failSeconds > lastUpdate && failedFlag == false) {
-                ownMemList.get(i).setFailedFlag(true);
+                } else if(currentTime - failSeconds > lastUpdate && failedFlag == false) {
+                    ownMemList.get(i).setFailedFlag(true);
+                    //Check if we own any backups from the failed node, and mark them for redistribution.
+                    ArrayList<KVEntry<String>> entries = kvc_backup.showStore();
+                    for(KVEntry<String> entry : entries) {
+                        int hash = 0;
+                        try {
+                            hash = (int)Hash.value(String.valueOf(entry.getKey()), 6);
+                        } catch (NoSuchAlgorithmException e) {
+                            e.printStackTrace();
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+                        }
+
+                        for(int j = 0; j < ownMemList.size(); j++) {
+                            if(ownMemList.get(j).getID() >= hash) {
+                                if(j == i) {
+                                    System.out.println("Marking Key: " + entry.getKey() + " Value: " + entry.getValue() + " to redistribute.");
+                                    entry.setRedistribute(true);
+                                }
+                                break;
+                            }
+                        }
+                }
+                System.out.println("Redistributing backup keys after failed node.");
+                
             }
             //System.out.print("ID: "+own.get().get(i).getID() + ", IP: " + own.get().get(i).getIPAddress() + " (" + !own.get().get(i).getFailedFlag() + ") ");
             }
