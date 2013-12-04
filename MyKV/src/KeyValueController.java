@@ -32,9 +32,14 @@ public class KeyValueController<T> {
             
             //Insert backup entries into adjacent nodes
             for(int i = 0; i < ownList.get().size(); i++) {
+                
+                System.out.println("Checking ip: " + ownList.get().get(i).getIPAddress());
+                
                 if(ownList.get().get(i).getIPAddress() == localIP) {
+                    
                     String message = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<backup><key>"+String.valueOf(key)+"</key><value>"+value+"</value></backup>\n";
                     try {
+                        System.out.println("Sending backups to: " + ownList.get().get(i+1).getIPAddress() + " and: " + ownList.get().get(i+2).getIPAddress());
                         Supplier.send(ownList.get().get(i+1).getIPAddress(), port, message);
                         Supplier.send(ownList.get().get(i+2).getIPAddress(), port, message);
                     } catch (IOException e) {
