@@ -84,11 +84,13 @@ public class KeyValueController<T> {
             e.printStackTrace();
         }
 		
-
+        System.out.println("Hash: " + hash);
+        
     	//Loop through the membershiplist and send an insert-request to the first node with an
     	//id higher than the hash
         for(int i=0;i<ownList.get().size();i++) {
 			
+            System.out.println("Checking IP: " + ownList.get().get(i).getIPAddress() + " ID: " + ownList.get().get(i).getID());
             if(ownList.get().get(i).getID() >= hash) {
                 String ip = ownList.get().get(i).getIPAddress();
 

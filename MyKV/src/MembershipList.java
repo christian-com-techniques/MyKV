@@ -28,7 +28,9 @@ public class MembershipList {
         
         //System.out.println("Adding: " + ip);
         MembershipEntry mE = new MembershipEntry(id, ip);
-        
+
+        System.out.println("Inserting IP: " + ip + " ID: " + id);
+
         if(membershipList.size() == 0) {
             membershipList.add(mE);
             
@@ -39,9 +41,12 @@ public class MembershipList {
         	//the current node is added at position i and the node with an higher ID than
         	//i is shifted to the right.
 	        for(int i=0;i<membershipList.size();i++) {
-	        		        	
+
+                    System.out.println("Comparing entry: " + membershipList.get(i).getIPAddress() + " ID: " + membershipList.get(i).getID());
+                    
 	            if(membershipList.get(i).getID() > id) {
-	            	membershipList.add(i, mE);
+	            	System.out.println("Inserting here.");
+                        membershipList.add(i, mE);
 	            	break;
 	            } 
 	            
