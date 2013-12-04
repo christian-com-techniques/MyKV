@@ -36,7 +36,7 @@ public class KeyValueController<T> {
             //Insert backup entries into adjacent nodes
             for(int i = 0; i < ownList.get().size(); i++) {
                 
-                System.out.println("Checking ip: " + ownList.get().get(i).getIPAddress());
+                System.out.println("Checking ip: " + ownList.get().get(i).getIPAddress() + " against my IP: " + localIP);
                 
                 if(ownList.get().get(i).getIPAddress() == localIP) {
                     
