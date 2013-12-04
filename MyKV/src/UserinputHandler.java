@@ -166,7 +166,7 @@ public class UserinputHandler implements Runnable {
                 System.out.println("Local Key-Value Backups -----------------");
                 
                 for(int i=0;i<bl.size();i++) {
-                    System.out.println("key: "+bl.get(i).getKey()+", value: "+bl.get(i).getValue());
+                    System.out.println("key: "+bl.get(i).getKey()+", value: "+bl.get(i).getValue()+", redist: "+bl.get(i).getRedistribute());
             	}
             	
             	System.out.println("Local Membershiplist --------------------");
