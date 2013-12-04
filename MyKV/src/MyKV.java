@@ -40,7 +40,7 @@ public class MyKV {
 	        
         KeyValueController<String> kvc = new KeyValueController<String>();
 
-        ConnectionHandler connectionHandler = new ConnectionHandler(conf);
+        ConnectionHandler connectionHandler = new ConnectionHandler(conf, kvc);
         Thread handlerThread = new Thread(connectionHandler, "Connection Handler");
         handlerThread.start();
 	        

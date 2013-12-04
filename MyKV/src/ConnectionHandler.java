@@ -27,13 +27,10 @@ public class ConnectionHandler implements Runnable {
     private int bufferSize = 2048;
     private static MembershipList list = new MembershipList();
     private KeyValueController<String> kvc;
-
-    public ConnectionHandler(KeyValueController<String> keyValueController) {
-        kvc = keyValueController;
-    }
     
-    public ConnectionHandler(Config conf) {
+    public ConnectionHandler(Config conf, KeyValueController<String> keyValueController) {
     	this.conf = conf;
+        kvc = keyValueController;
     }
     
 	@Override
