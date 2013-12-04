@@ -145,8 +145,6 @@ public class MembershipController {
             boolean failedFlag = ownMemList.get(i).getFailedFlag();
                 
             if(currentTime - (failSeconds * 2) > lastUpdate && failedFlag == true) {
-                ownMemList.remove(i);
-
                 //Check if we own any backups from the failed node, and mark them for redistribution.
                 ArrayList<KVEntry<String>> entries = kvc_backup.showStore();
                 for(KVEntry<String> entry : entries) {
@@ -170,6 +168,7 @@ public class MembershipController {
                     }
                 }
 
+                ownMemList.remove(i);
                 continue;
                     
             } else if(currentTime - failSeconds > lastUpdate && failedFlag == false) {
