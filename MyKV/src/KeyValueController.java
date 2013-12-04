@@ -19,6 +19,9 @@ public class KeyValueController<T> {
         String localIP = MyKV.getmyIP();
 
         if(insertHere) {
+
+            System.out.println("insertHere hit.");
+
             KVEntry<T> entry = new KVEntry<T>(key, value);
 			
             //If key already exists in store, do nothing
