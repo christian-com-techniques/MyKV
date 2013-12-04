@@ -38,7 +38,7 @@ public class KeyValueController<T> {
                 
                 System.out.println("Checking ip: " + ownList.get().get(i).getIPAddress() + " against my IP: " + localIP);
                 
-                if(ownList.get().get(i).getIPAddress() == localIP) {
+                if(ownList.get().get(i).getIPAddress().equals(localIP)) {
                     
                     String message = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<backup><key>"+String.valueOf(key)+"</key><value>"+value+"</value></backup>\n";
                     try {
