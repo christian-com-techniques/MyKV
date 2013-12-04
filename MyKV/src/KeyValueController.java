@@ -23,7 +23,7 @@ public class KeyValueController<T> {
 
         if(insertHere) {
 
-            System.out.println("insertHere hit.");
+//            System.out.println("insertHere hit.");
 
             KVEntry<T> entry = new KVEntry<T>(key, value);
 
@@ -32,7 +32,7 @@ public class KeyValueController<T> {
                 //Insert backup entries into adjacent nodes
                 for(int i = 0; i < ownList.get().size(); i++) {
                     
-                    System.out.println("Checking ip: " + ownList.get().get(i).getIPAddress() + " against my IP: " + localIP);
+//                    System.out.println("Checking ip: " + ownList.get().get(i).getIPAddress() + " against my IP: " + localIP);
                     
                     if(ownList.get().get(i).getIPAddress().equals(localIP)) {
                         
@@ -41,9 +41,9 @@ public class KeyValueController<T> {
                             + value + "</value></backup>\n";
                         
                         try {
-                            System.out.println("Sending backups to: " 
-                                               + ownList.get().get((i+1) % ownList.get().size()).getIPAddress() + " and: " 
-                                               + ownList.get().get((i+2) % ownList.get().size()).getIPAddress());
+//                            System.out.println("Sending backups to: " 
+//                                               + ownList.get().get((i+1) % ownList.get().size()).getIPAddress() + " and: " 
+//                                               + ownList.get().get((i+2) % ownList.get().size()).getIPAddress());
                             Supplier.send(
                                 ownList.get().get((i+1) % ownList.get().size()).getIPAddress(), 
                                 port, 
@@ -85,17 +85,17 @@ public class KeyValueController<T> {
             e.printStackTrace();
         }
 		
-        System.out.println("Hash: " + hash);
+//        System.out.println("Hash: " + hash);
         
     	//Loop through the membershiplist and send an insert-request to the first node with an
     	//id higher than the hash
         for(int i=0;i<ownList.get().size();i++) {
 			
-            System.out.println("Checking IP: " + ownList.get().get(i).getIPAddress() + " ID: " + ownList.get().get(i).getID());
+//            System.out.println("Checking IP: " + ownList.get().get(i).getIPAddress() + " ID: " + ownList.get().get(i).getID());
             if(ownList.get().get(i).getID() >= hash) {
                 String ip = ownList.get().get(i).getIPAddress();
 
-                System.out.println("Sending Key: " + key + " Value: " + value + " Hash: " + hash + " to: " + ip);
+//                System.out.println("Sending Key: " + key + " Value: " + value + " Hash: " + hash + " to: " + ip);
 				
                 String message = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<insert><key>"+String.valueOf(key)+"</key><value>"+value+"</value></insert>\n";
                 try {
@@ -387,7 +387,7 @@ public class KeyValueController<T> {
                 int key = store.get(i).getKey();
                 String value = (String)store.get(i).getValue();
 
-                System.out.println("Checking: " + key + " " + value);
+                
 
                 int hash = 0;
                 try {
@@ -397,38 +397,27 @@ public class KeyValueController<T> {
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
-			
+
+//                System.out.println("Checking: " + key + " " + value + " " + hash);
+	
                 for(int j=0;j<ownList.get().size();j++) {
 				
-                    if(ownList.get().get(j).getID() >= hash) {
-                        String ip = ownList.get().get(j).getIPAddress();
+                    if(ownList.get().get(j).getID() >= hash || j+1 == ownList.get().size()) {
+                        String ip = "";
+                        if(ownList.get().get(j).getID() >= hash)
+                            ip = ownList.get().get(j).getIPAddress();
+                        else if(j+1 == ownList.get().size())
+                            ip = ownList.get().get(0).getIPAddress();
 
+                        
                         //We hash all values in our local key-value-store and check, if all the values
                         //are hashed to some machine, that we are one of the next two nodes in the ring. 
                         //If not, the key-value-pair is sent to the machine where it should be according 
                         //to the local membership list. The pair is deleted locally afterwards.
-                        
-                        
-
                         if((!(ownList.get().get((j+1) % ownList.get().size()).getIPAddress().equals(localIP) 
                               || ownList.get().get((j+2) % ownList.get().size()).getIPAddress().equals(localIP))) || store.get(i).getRedistribute())
                         {
                             
-                            System.out.println("Our node list:");
-                            for(int k = 0; k < ownList.get().size(); k++)
-                            {
-                                System.out.println(ownList.get().get(k).getIPAddress() + " : " + ownList.get().get(k).getID());
-                            }
-
-                            if(store.get(i).getRedistribute())
-                            {
-                                System.out.println("Backup of Key: " + Integer.toString(key) + " Value: " + value + " marked for redistribution.");
-                            } else {
-                                System.out.println("Backup of Key: " + Integer.toString(key) + " Value: " + value + " does not belong here.");
-                                System.out.println("Backups belong at: " + ownList.get().get((j+2) % ownList.get().size()).getIPAddress() + " and " + ownList.get().get((j+1) % ownList.get().size()).getIPAddress());
-                            }
-
-                            System.out.println("Sending backup to owning node: " + ip);
                             String message = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<insert><key>"+String.valueOf(key)+"</key><value>"+value+"</value></insert>\n";
                             int port = MyKV.getContactPort();
 
@@ -440,7 +429,7 @@ public class KeyValueController<T> {
 
                             if(store.get(i).getRedistribute()) {
                                 if(ip.equals(localIP)) {
-                                    System.out.println("Unmarking " + store.get(i).getKey() + " " + store.get(i).getValue() + " as redistribute.");
+                                    //System.out.println("Unmarking " + store.get(i).getKey() + " " + store.get(i).getValue() + " as redistribute.");
                                     store.get(i).setRedistribute(false);
                                 }
                             }
