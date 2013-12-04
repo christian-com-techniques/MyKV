@@ -410,7 +410,7 @@ public class KeyValueController<T> {
                             System.out.println("Our node list:");
                             for(int k = 0; k < ownList.get().size(); k++)
                             {
-                                System.out.println(ownList.get().get(k).getIPAddress());
+                                System.out.println(ownList.get().get(k).getIPAddress() + " : " + ownList.get().get(k).getID());
                             }
                             
                             System.out.println("Backup of Key: " + Integer.toString(key) + " Value: " + value + " does not belong here.");
