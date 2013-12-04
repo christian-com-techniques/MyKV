@@ -408,7 +408,7 @@ public class KeyValueController<T> {
                         {
                             
                             System.out.println("Backup of Key: " + Integer.toString(key) + " Value: " + value + " does not belong here.");
-                            System.out.println("Backups belong at: " + ownList.get().get((j+2) % ownList.get().size()).getIPAddress().equals(localIP) + " and " + ownList.get().get((j+1) % ownList.get().size()).getIPAddress().equals(localIP));
+                            System.out.println("Backups belong at: " + ownList.get().get((j+2) % ownList.get().size()).getIPAddress() + " and " + ownList.get().get((j+1) % ownList.get().size()).getIPAddress());
 
                             System.out.println("Sending backup to owning node: " + ip);
                             String message = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<insert><key>"+String.valueOf(key)+"</key><value>"+value+"</value></insert>\n";
