@@ -407,7 +407,7 @@ public class KeyValueController<T> {
                              || ownList.get().get((j+2) % ownList.get().size()).getIPAddress().equals(localIP)))
                         {
                     
-                            println("Our node list:");
+                            System.out.println("Our node list:");
                             for(int k = 0; k < ownList.get().size(); k++)
                             {
                                 System.out.println(ownList.get().get(k).getIPAddress());
