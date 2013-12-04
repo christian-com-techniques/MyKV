@@ -42,9 +42,9 @@ public class KeyValueController<T> {
                     
                     String message = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<backup><key>"+String.valueOf(key)+"</key><value>"+value+"</value></backup>\n";
                     try {
-                        System.out.println("Sending backups to: " + ownList.get().get(i+1).getIPAddress() + " and: " + ownList.get().get(i+2).getIPAddress());
-                        Supplier.send(ownList.get().get(i+1).getIPAddress(), port, message);
-                        Supplier.send(ownList.get().get(i+2).getIPAddress(), port, message);
+                        System.out.println("Sending backups to: " + ownList.get().get(i+1 % ownList.get().size()).getIPAddress() + " and: " + ownList.get().get(i+2 % ownList.get().size()).getIPAddress());
+                        Supplier.send(ownList.get().get(i+1 % ownList.get().size()).getIPAddress(), port, message);
+                        Supplier.send(ownList.get().get(i+2 % ownList.get().size()).getIPAddress(), port, message);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
