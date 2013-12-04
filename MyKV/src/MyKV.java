@@ -46,7 +46,7 @@ public class MyKV {
         Thread handlerThread = new Thread(connectionHandler, "Connection Handler");
         handlerThread.start();
 	        
-        UserinputHandler userinputHandler = new UserinputHandler(kvc);
+        UserinputHandler userinputHandler = new UserinputHandler(kvc, kvc_backup);
         Thread userinputThread = new Thread(userinputHandler, "Userinput Handler");
         userinputThread.start();
 	        
