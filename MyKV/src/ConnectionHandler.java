@@ -27,10 +27,12 @@ public class ConnectionHandler implements Runnable {
     private int bufferSize = 2048;
     private static MembershipList list = new MembershipList();
     private KeyValueController<String> kvc;
+    private KeyValueController<String> kvc_backup;
     
     public ConnectionHandler(Config conf, KeyValueController<String> keyValueController) {
     	this.conf = conf;
         kvc = keyValueController;
+        kvc_backup = new KeyValueController<String>();
     }
     
     @Override
@@ -160,6 +162,24 @@ public class ConnectionHandler implements Runnable {
             	
                 System.out.println("Key: " + Integer.toString(key) + " | Value: " + value + " inserted.");
             
+            } else if (a.getNodeName() == "backup") {
+                NodeList n = a.getChildNodes();
+                int key = 0;
+                String value = null;
+
+                for(int i=0;i<n.getLength();i++) {
+                    if(n.item(i).getNodeName().equals("key")) {
+                        key = Integer.valueOf(n.item(i).getTextContent());
+                    }
+                    if(n.item(i).getNodeName().equals("value")) {
+                        value = n.item(i).getTextContent();
+                    }
+            	}
+
+                kvc_backup.insert(key, value, true);
+            	
+                System.out.println("Key: " + Integer.toString(key) + " | Value: " + value + " inserted as backup.");
+                
             } else if(a.getNodeName() == "delete") {
             
             	NodeList n = a.getChildNodes();

@@ -13,7 +13,11 @@ public class KeyValueController<T> {
     }
 
     public void insert(int key, T value, boolean insertHere) {
-        
+
+        MembershipList ownList = ConnectionHandler.getMembershipList();
+    	int port = MyKV.getContactPort();
+        String localIP = MyKV.getmyIP();
+
         if(insertHere) {
             KVEntry<T> entry = new KVEntry<T>(key, value);
 			
@@ -27,7 +31,17 @@ public class KeyValueController<T> {
             store.add(entry);
             
             //Insert backup entries into adjacent nodes
-            
+            for(int i = 0; i < ownList.get().size(); i++) {
+                if(ownList.get().get(i).getIPAddress() == localIP) {
+                    String message = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<backup><key>"+String.valueOf(key)+"</key><value>"+value+"</value></backup>\n";
+                    try {
+                        Supplier.send(ownList.get().get(i+1).getIPAddress(), port, message);
+                        Supplier.send(ownList.get().get(i+2).getIPAddress(), port, message);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
 
             return;
         }
@@ -42,10 +56,6 @@ public class KeyValueController<T> {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-		
-		
-    	MembershipList ownList = ConnectionHandler.getMembershipList();
-    	int port = MyKV.getContactPort();
 		
 
     	//Loop through the membershiplist and send an insert-request to the first node with an

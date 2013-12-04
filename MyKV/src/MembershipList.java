@@ -21,6 +21,7 @@ public class MembershipList {
     public MembershipList(ArrayList<MembershipEntry> me) {
         this.membershipList = me;
     }
+
     
     
     public void add(int id, String ip) {                
