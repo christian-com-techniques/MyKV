@@ -430,6 +430,8 @@ public class KeyValueController<T> {
 
                             if(store.get(i).getRedistribute()) {
                                 store.get(i).setRedistribute(false);
+                            }
+                            else {
                                 for(int k = 0; k < store.size(); k++) {
                                     if(store.get(k).getKey() == key) {
                                         store.remove(k);
